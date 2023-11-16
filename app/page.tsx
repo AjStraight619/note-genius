@@ -1,14 +1,15 @@
+import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/utils/authOptions";
+import { User } from "@prisma/client";
 import { Card, Container, Flex, Text } from "@radix-ui/themes";
 import { getServerSession } from "next-auth";
+import styles from "./animations.module.css";
 import { LogInButton } from "./components/auth/auth";
-
-import styles from "./animations.module.css"; // Import the animations styles
 
 type FeatureSectionProps = {
   title: string;
   description: string;
-  dynamic?: boolean; // Optional prop to determine if the section has dynamic background
+  dynamic?: boolean;
 };
 
 const FeatureSection = ({
@@ -29,8 +30,33 @@ const FeatureSection = ({
   </Card>
 );
 
+const getMostRecentChat = async (userId: string) => {
+  "use server";
+
+  const mostRecentChat = prisma.chat.findFirst({
+    where: {
+      userId: userId,
+    },
+    select: {
+      id: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return mostRecentChat;
+};
+
 export default async function Home() {
+  let mostRecentChat;
   const session = await getServerSession(authOptions);
+  if (session) {
+    const user = session.user as User;
+    const userId = user.id;
+    mostRecentChat = await getMostRecentChat(userId);
+    console.log(mostRecentChat);
+  }
 
   return (
     <Container size={"4"} mx={"auto"} my={"9"} px={"2"}>

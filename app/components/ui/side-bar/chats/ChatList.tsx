@@ -21,7 +21,7 @@ const ChatList = ({ chats }: ChatListProps) => {
   return (
     <Flex direction={"column"} gap={"2"}>
       {chats.map((chat) => (
-        <Link key={chat.id} href={`/chat/${chat.id}`} passHref>
+        <Link key={chat.id} href={`/chat/${chat.id}`} passHref scroll={false}>
           <div
             className={`p-1 cursor-pointer rounded-md ${
               selectedChatId === chat.id ? "bg-gray-700" : "hover:bg-gray-800"
