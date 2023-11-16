@@ -1,6 +1,6 @@
 import Chat from "./Chat";
 
-export const runtime = "edge";
+// export const runtime = "edge";
 
 const ChatComponentContainer = () => {
   return (
