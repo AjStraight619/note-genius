@@ -1,5 +1,3 @@
-import { NextRequest, NextResponse } from "next/server";
-
 // const getMostRecentChat = async (userId: string) => {
 //   const mostRecentChat = prisma.chat.findFirst({
 //     where: {
@@ -15,10 +13,10 @@ import { NextRequest, NextResponse } from "next/server";
 //   return mostRecentChat;
 // };
 
-export async function middleware(req: NextRequest) {
-  return NextResponse.redirect(new URL("/", req.url));
-}
+// export async function middleware(req: NextRequest) {
 
-export const config = {
-  matcher: ["/"],
-};
+// }
+
+// export const config = {
+//   matcher: ["/"],
+// };
