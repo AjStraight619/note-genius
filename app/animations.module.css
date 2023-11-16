@@ -1,0 +1,10 @@
+@keyframes dynamicBackground {
+    0% { background-position: 0 0; }
+    100% { background-position: 100% 0; }
+  }
+  
+  .dynamicBackground {
+    animation: dynamicBackground 10s linear infinite;
+    background-size: 200% 100%;
+  
+  }
