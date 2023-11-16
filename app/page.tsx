@@ -3,6 +3,7 @@ import { authOptions } from "@/utils/authOptions";
 import { User } from "@prisma/client";
 import { Card, Container, Flex, Text } from "@radix-ui/themes";
 import { getServerSession } from "next-auth";
+import Link from "next/link";
 import styles from "./animations.module.css";
 import { LogInButton } from "./components/auth/auth";
 
@@ -30,9 +31,8 @@ const FeatureSection = ({
   </Card>
 );
 
-const getMostRecentChat = async (userId: string) => {
+const getMostRecentChat = async (userId: string | undefined) => {
   "use server";
-
   const mostRecentChat = prisma.chat.findFirst({
     where: {
       userId: userId,
@@ -49,14 +49,16 @@ const getMostRecentChat = async (userId: string) => {
 };
 
 export default async function Home() {
-  let mostRecentChat;
   const session = await getServerSession(authOptions);
+  let userId;
+
   if (session) {
     const user = session.user as User;
-    const userId = user.id;
-    mostRecentChat = await getMostRecentChat(userId);
-    console.log(mostRecentChat);
+    userId = user.id as unknown as string;
+    console.log(userId);
   }
+
+  const mostRecentChat = await getMostRecentChat(userId);
 
   return (
     <Container size={"4"} mx={"auto"} my={"9"} px={"2"}>
@@ -98,6 +100,8 @@ export default async function Home() {
           <LogInButton />
         </Flex>
       )}
+
+      <Link href={`/chat/${mostRecentChat?.id}`}>Go to chats</Link>
     </Container>
   );
 }
