@@ -3,10 +3,6 @@ import { authOptions } from "@/utils/authOptions";
 import { User } from "@prisma/client";
 import { getServerSession } from "next-auth";
 
-type PageProps = {
-  userId: string;
-};
-
 const getChatMetaData = async (userId: string | undefined) => {
   "use server";
   const chatMetaData = await prisma.chat.findMany({
