@@ -1,7 +1,6 @@
 import { getChatMetaData } from "@/app/chat-actions/chatActions";
-import ChatComponentContainer from "@/app/components/chat-page/ChatComponentContainer";
-import Sidebar from "@/app/components/ui/side-bar/Sidebar";
-import SidebarContainer from "@/app/components/ui/side-bar/SidebarContainer";
+import ChatDashboard from "@/app/components/chat/ChatDashboard";
+
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/utils/authOptions";
 import { User } from "@prisma/client";
@@ -23,7 +22,7 @@ const getChatById = async (chatId: string, userId: string) => {
   return chat;
 };
 
-const ChatPage = async ({ params }: { params: { chatId: string } }) => {
+const Chat = async ({ params }: { params: { chatId: string } }) => {
   let chatMetaData;
   let userId;
   const session = await getServerSession(authOptions);
@@ -47,19 +46,16 @@ const ChatPage = async ({ params }: { params: { chatId: string } }) => {
     }
   }
 
-  // const chatById = await getChatById(chatId, userId);
-  console.log("This is the chat meta data", chatMetaData);
-
-  // console.log("This is the chat I got by the id", chatById);
-
   return (
-    <Flex direction={"row"} position={"relative"}>
-      <SidebarContainer>
-        <Sidebar chats={chatMetaData || []} />
-      </SidebarContainer>
-      <ChatComponentContainer />
+    <Flex
+      direction={"row"}
+      position={"relative"}
+      height={"100%"}
+      width={"100%"}
+    >
+      <ChatDashboard chats={chatMetaData || []} />
     </Flex>
   );
 };
 
-export default ChatPage;
+export default Chat;

@@ -3,20 +3,27 @@ import { ChatMetaData } from "@/types/metaDataTypes";
 import { Flex } from "@radix-ui/themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 type ChatListProps = {
   chats: ChatMetaData[];
+  selectedChatId: string | null;
+  setSelectedChatId: React.Dispatch<React.SetStateAction<string | null>>; // Corrected type
 };
 
-const ChatList = ({ chats }: ChatListProps) => {
+const ChatList = ({
+  chats,
+  selectedChatId,
+  setSelectedChatId,
+}: ChatListProps) => {
   const pathname = usePathname();
-  const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 
   useEffect(() => {
     const chatId = pathname.split("/chat/")[1];
-    setSelectedChatId(chatId);
-  }, [pathname]);
+    if (chatId) {
+      setSelectedChatId(chatId);
+    }
+  }, [pathname, setSelectedChatId]);
 
   return (
     <Flex direction={"column"} gap={"2"}>
@@ -35,4 +42,4 @@ const ChatList = ({ chats }: ChatListProps) => {
   );
 };
 
-export default React.memo(ChatList);
+export default ChatList;

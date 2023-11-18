@@ -23,9 +23,15 @@ type SideBarProps = {
   chats?: ChatMetaData[];
   folders?: FolderMetaData[];
   files?: FileMetaData[];
+  selectedChatId: string | null;
+  setSelectedChatId: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-const Sidebar = ({ chats }: SideBarProps) => {
+const Sidebar = ({
+  chats,
+  selectedChatId,
+  setSelectedChatId,
+}: SideBarProps) => {
   const [activeTab, setActiveTab] = useState("Chats");
 
   return (
@@ -74,7 +80,13 @@ const Sidebar = ({ chats }: SideBarProps) => {
           <Text className="text-gray-300 text-sm">{activeTab}</Text>
 
           <Separator size={"4"} mb={"3"} className="bg-gray-600" />
-          {activeTab === "Chats" && chats && <ChatList chats={chats} />}
+          {activeTab === "Chats" && chats && (
+            <ChatList
+              selectedChatId={selectedChatId}
+              setSelectedChatId={setSelectedChatId}
+              chats={chats}
+            />
+          )}
           {/* {activeTab === "folders" && folders && <FolderList />} */}
           {/* {activeTab === "files" && files && <LinkList  />} */}
         </Flex>

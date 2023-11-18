@@ -60,6 +60,8 @@ export default async function Home() {
 
   const mostRecentChat = await getMostRecentChat(userId);
 
+  // Maybe call redirect here on the most recent chat?
+
   return (
     <Container size={"4"} mx={"auto"} my={"9"} px={"2"}>
       <Flex
@@ -101,7 +103,7 @@ export default async function Home() {
         </Flex>
       )}
 
-      <Link href={`/chat/${mostRecentChat?.id}`}>Go to chats</Link>
+      <Link href={`/chat/`}>Go to chats</Link>
     </Container>
   );
 }

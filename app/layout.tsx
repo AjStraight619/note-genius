@@ -1,8 +1,8 @@
+import Navbar from "@/app/components/ui/navbar/Navbar";
 import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Navbar from "./components/ui/Navbar";
 import "./globals.css";
 import { Providers } from "./providers";
 
@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Providers>
-        <body className={inter.className}>
+        <body className={inter.className} suppressHydrationWarning>
           <Theme accentColor="indigo" appearance="dark">
             <Navbar />
             {children}
