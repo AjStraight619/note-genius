@@ -7,7 +7,7 @@ const Navbar = async () => {
     <Box
       width={"100%"}
       height={"9"}
-      className="border-b border-gray-600  flex-col flex-1"
+      className="border-b border-gray-600 fixed top-0 flex-col flex-1"
     >
       <Flex
         justify={"between"}
