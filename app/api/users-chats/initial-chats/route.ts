@@ -24,3 +24,28 @@ export async function POST(req: NextRequest) {
     title: newChat.title,
   });
 }
+
+export async function GET() {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return NextResponse.json({ message: "No session" });
+  }
+
+  const user = session.user as User;
+  const userId = user.id;
+
+  const mostRecentChat = await prisma.chat.findFirst({
+    where: {
+      userId: userId,
+    },
+    orderBy: {
+      updatedAt: "desc",
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  return NextResponse.json(mostRecentChat);
+}

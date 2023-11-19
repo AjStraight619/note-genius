@@ -1,24 +1,45 @@
 import { Message } from "ai";
-import { MutableRefObject, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 type useUpdateMessagesProps = {
-  chatId: string;
-  messagesRef: MutableRefObject<Message[]>;
+  chatId: string | null;
+  messages: Message[];
 };
 
 const useUpdateChatMessages = ({
   chatId,
-  messagesRef,
+  messages,
 }: useUpdateMessagesProps) => {
-  useEffect(() => {
-    const updateDatabase = async () => {
-      if (chatId && messagesRef.current.length > 0) {
-        // Logic to update the database with new messages
-      }
-    };
+  const updateMessagesInDatabase = useCallback(async () => {
+    if (chatId && messages.length > 0) {
+      {
+        try {
+          const response = await fetch("/api/users-chats", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              chatId,
+              newMessages: messages,
+            }),
+          });
 
-    updateDatabase();
-  }, [chatId, messagesRef]);
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+
+          console.log("Messages updated successfully:", response);
+        } catch (error) {
+          console.error("Failed to update messages:", error);
+        }
+      }
+    }
+  }, [chatId, messages]);
+
+  useEffect(() => {
+    updateMessagesInDatabase();
+  }, [chatId, messages, updateMessagesInDatabase]);
 };
 
 export default useUpdateChatMessages;

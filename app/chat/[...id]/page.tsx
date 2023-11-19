@@ -1,6 +1,6 @@
 import { getChatMetaData } from "@/app/chat-actions/chatActions";
 import ChatDashboard from "@/app/components/chat/ChatDashboard";
-
+import { ChatNavigationProvider } from "@/context/ChatNavigationContext";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/utils/authOptions";
 import { User } from "@prisma/client";
@@ -8,13 +8,16 @@ import { Flex } from "@radix-ui/themes";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
-const getChatById = async (chatId: string, userId: string) => {
-  const chat = prisma.chat.findUnique({
+const getMostRecentChatById = async (userId: string) => {
+  const chat = prisma.chat.findFirst({
     where: {
-      id: chatId,
       userId: userId,
     },
-    include: {
+    orderBy: {
+      updatedAt: "desc",
+    },
+    select: {
+      id: true,
       chatMessages: true,
     },
   });
@@ -47,14 +50,16 @@ const Chat = async ({ params }: { params: { chatId: string } }) => {
   }
 
   return (
-    <Flex
-      direction={"row"}
-      position={"relative"}
-      height={"100%"}
-      width={"100%"}
-    >
-      <ChatDashboard chats={chatMetaData || []} />
-    </Flex>
+    <ChatNavigationProvider>
+      <Flex
+        direction={"row"}
+        position={"relative"}
+        height={"100%"}
+        width={"100%"}
+      >
+        <ChatDashboard chats={chatMetaData || []} />
+      </Flex>
+    </ChatNavigationProvider>
   );
 };
 

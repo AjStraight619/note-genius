@@ -1,4 +1,3 @@
-import Navbar from "@/app/components/ui/navbar/Navbar";
 import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 import type { Metadata } from "next";
@@ -22,7 +21,7 @@ export default function RootLayout({
       <Providers>
         <body className={inter.className} suppressHydrationWarning>
           <Theme accentColor="indigo" appearance="dark">
-            <Navbar />
+            {/* <Navbar /> */}
             {children}
           </Theme>
         </body>
