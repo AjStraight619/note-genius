@@ -1,3 +1,4 @@
+"use client";
 import { Toast, ToastProps } from "@/app/components/ui/toast/Toast";
 import React, { ReactNode, createContext, useContext, useState } from "react";
 
