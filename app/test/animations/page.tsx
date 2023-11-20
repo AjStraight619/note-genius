@@ -1,6 +1,7 @@
+"use client";
 import { animated, useSpring } from "@react-spring/web";
 
-function MyComponent() {
+export default function MyComponent() {
   const [props, api] = useSpring(
     () => ({
       from: { opacity: 0 },
