@@ -1,6 +1,7 @@
 import { getChatMetaData } from "@/app/chat-actions/chatActions";
 import ChatDashboard from "@/app/components/chat/ChatDashboard";
 import { ChatNavigationProvider } from "@/context/ChatNavigationContext";
+import { ToastProvider } from "@/context/ToastContext";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/utils/authOptions";
 import { User } from "@prisma/client";
@@ -51,14 +52,16 @@ const Chat = async ({ params }: { params: { chatId: string } }) => {
 
   return (
     <ChatNavigationProvider>
-      <Flex
-        direction={"row"}
-        position={"relative"}
-        height={"100%"}
-        width={"100%"}
-      >
-        <ChatDashboard chats={chatMetaData || []} />
-      </Flex>
+      <ToastProvider>
+        <Flex
+          direction={"row"}
+          position={"relative"}
+          height={"100%"}
+          width={"100%"}
+        >
+          <ChatDashboard chats={chatMetaData || []} />
+        </Flex>
+      </ToastProvider>
     </ChatNavigationProvider>
   );
 };

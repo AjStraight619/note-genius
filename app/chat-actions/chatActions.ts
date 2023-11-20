@@ -42,3 +42,28 @@ export const addChat = async (formData: FormData) => {
   revalidatePath("/chat");
   return newChat;
 };
+
+export const deleteChat = async (chatId: string | null) => {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return;
+  }
+  if (!chatId) {
+    return;
+  }
+
+  const user = session.user as User;
+  const userId = user.id;
+
+  const deletedChat = await prisma.chat.delete({
+    where: {
+      id: chatId,
+      userId: userId,
+    },
+    select: {
+      title: true,
+    },
+  });
+  revalidatePath("/chat");
+  return deletedChat;
+};

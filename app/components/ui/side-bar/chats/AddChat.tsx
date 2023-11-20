@@ -43,33 +43,33 @@ const AddChat = ({ addOptimisticChats }: AddChatProps) => {
           gap={"2"}
         >
           <Heading mb={"4"}>New Chat</Heading>
-          <Flex gap={"2"}>
-            <form
-              ref={chatTitleRef}
-              action={async (formData) => {
-                chatTitleRef.current?.reset();
-                handleClose();
-                addOptimisticChats({
-                  id: "",
-                  title: formData.append(
-                    "chatTitle",
-                    chatTitle
-                  ) as unknown as string,
-                });
 
-                await addChat(formData);
-              }}
-            >
-              <TextFieldInput
-                name="chatTitle"
-                value={chatTitle}
-                onChange={(e) => setChatTitle(e.target.value)}
-              />
+          <form
+            ref={chatTitleRef}
+            action={async (formData) => {
+              chatTitleRef.current?.reset();
+              handleClose();
+              addOptimisticChats({
+                id: "",
+                title: formData.append(
+                  "chatTitle",
+                  chatTitle
+                ) as unknown as string,
+              });
 
-              <SubmitButton>Add Chat</SubmitButton>
-            </form>
-          </Flex>
+              await addChat(formData);
+            }}
+          >
+            <TextFieldInput
+              placeholder="Name this chat..."
+              name="chatTitle"
+              value={chatTitle}
+              onChange={(e) => setChatTitle(e.target.value)}
+            />
+            <SubmitButton>Add Chat</SubmitButton>
+          </form>
         </Flex>
+
         <Dialog.Close>
           <IconButton
             variant="ghost"
