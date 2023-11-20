@@ -1,6 +1,6 @@
 "use client";
 import { Toast, ToastProps } from "@/app/components/ui/toast/Toast";
-import React, { ReactNode, createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 interface ToastContextType {
   showToast: (props: ToastProps) => void;
@@ -10,9 +10,7 @@ const ToastContext = createContext<ToastContextType | null>(null);
 
 export const useToast = () => useContext(ToastContext)!;
 
-export const ToastProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const ToastProvider = (children: React.ReactNode) => {
   const [toastProps, setToastProps] = useState<ToastProps | null>(null);
 
   const showToast = (props: ToastProps) => {
