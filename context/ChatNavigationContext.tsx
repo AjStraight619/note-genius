@@ -1,9 +1,17 @@
 "use client";
-import { ReactNode, createContext, useContext, useState } from "react";
+import { usePathname } from "next/navigation";
+import {
+  ReactNode,
+  SetStateAction,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 type ChatNavigationContextType = {
   currentChatId: string | null;
-  handleChangeId: (newChatId: string | null) => void;
+  setCurrentChatId: React.Dispatch<SetStateAction<string | null>>;
 };
 
 export const ChatNavigationContext =
@@ -17,18 +25,16 @@ export const ChatNavigationProvider = ({
   children,
 }: ChatNavigationProviderProps) => {
   const [currentChatId, setCurrentChatId] = useState<string | null>(null);
+  const pathname = usePathname();
 
-  const handleChangeId = (newChatId: string | null) => {
-    if (newChatId === null) {
-      console.warn("Attempted to set currentChatId to null");
-      return;
-    }
-    if (newChatId !== currentChatId) {
-      setCurrentChatId(newChatId);
-    }
-  };
+  useEffect(() => {
+    // Extract chat ID from the pathname and update state
+    const pathSegments = pathname.split("/");
+    const chatId = pathSegments[pathSegments.length - 1];
+    setCurrentChatId(chatId);
+  }, [pathname]);
 
-  const contextValue = { currentChatId, handleChangeId };
+  const contextValue = { currentChatId, setCurrentChatId };
 
   return (
     <ChatNavigationContext.Provider value={contextValue}>

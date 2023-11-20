@@ -9,6 +9,7 @@ import {
   FolderArrowDownIcon,
   LinkIcon,
 } from "@heroicons/react/24/solid";
+import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import {
   Flex,
   IconButton,
@@ -19,19 +20,35 @@ import {
 import { useState } from "react";
 import ChatList from "./chats/ChatList";
 
+import AddChat from "./chats/AddChat";
+
 type SideBarProps = {
   chats?: ChatMetaData[];
   folders?: FolderMetaData[];
   files?: FileMetaData[];
   currentChatId: string | null;
-  handleChangeId: (newChatId: string | null) => void;
+  addOptimisticChats: (newChat: ChatMetaData) => void;
 };
 
-const Sidebar = ({ chats, currentChatId, handleChangeId }: SideBarProps) => {
+const Sidebar = ({ chats, addOptimisticChats }: SideBarProps) => {
   const [activeTab, setActiveTab] = useState("Chats");
 
   return (
     <>
+      <Flex
+        mt={"2"}
+        justify={"between"}
+        width={"100%"}
+        pl={"6"}
+        pr={"6"}
+        mb={"4"}
+      >
+        <AddChat addOptimisticChats={addOptimisticChats} />
+
+        <IconButton variant="soft">
+          <HamburgerMenuIcon />
+        </IconButton>
+      </Flex>
       <Flex
         direction={"row"}
         justify={"between"}

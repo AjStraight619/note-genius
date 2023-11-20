@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useOptimistic, useState } from "react";
 import Sidebar from "../ui/side-bar/Sidebar";
 import SidebarContainer from "../ui/side-bar/SidebarContainer";
 import Chat from "./Chat";
@@ -21,14 +21,17 @@ type SideBarProps = {
 };
 
 const ChatDashboard = ({ chats }: SideBarProps) => {
-  const { currentChatId, handleChangeId } = useChatNavigation();
+  const { currentChatId } = useChatNavigation();
   const [messagesFromDb, setMessagesFromDb] = useState<ChatWithMessages | null>(
     null
   );
 
-  useEffect(() => {
-    console.log(`currentChatId updated to: ${currentChatId}`);
-  }, [currentChatId]);
+  const [optimisticChats, addOptimisticChats] = useOptimistic(
+    chats,
+    (state: ChatMetaData[] = [], newChat: ChatMetaData) => {
+      return [newChat, ...state];
+    }
+  );
 
   useEffect(() => {
     const getChatMessagesById = async () => {
@@ -57,9 +60,9 @@ const ChatDashboard = ({ chats }: SideBarProps) => {
       {/* Sidebar Container */}
       <SidebarContainer>
         <Sidebar
-          handleChangeId={handleChangeId}
           currentChatId={currentChatId}
-          chats={chats}
+          chats={optimisticChats}
+          addOptimisticChats={addOptimisticChats}
         />
       </SidebarContainer>
 

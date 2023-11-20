@@ -1,24 +1,15 @@
 "use client";
-import useUpdateChatMessages from "@/hooks/useUpdateChatMessages";
 import { ChatWithMessages } from "@/types/chatTypes";
 import { ArrowUpCircleIcon } from "@heroicons/react/24/solid";
 import { IconButton, ScrollArea, Text } from "@radix-ui/themes";
 import { useChat } from "ai/react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { SetStateAction, useEffect, useRef, useState } from "react";
+import { SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 import { AssistantAvatar, UserAvatar } from "../ui/avatars/Avatars";
 import "./styles.css";
 
 import { useChatNavigation } from "@/context/ChatNavigationContext";
-
-type UnifiedMessageType = {
-  id: string;
-  role: string;
-  content: string;
-  createdAt: Date;
-  chatId?: string | null;
-};
+import { Message } from "ai";
 
 type ChatProps = {
   currentChatId: string | null;
@@ -42,33 +33,55 @@ export default function Chat({ messagesFromDb, setMessagesFromDb }: ChatProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isAutoScrollEnabled, setIsAutoScrollEnabled] = useState(true);
   const { data: session } = useSession();
-  const router = useRouter();
-  const [error, setError] = useState("");
-  const [chatCompleted, setChatCompleted] = useState(false);
-  const [initiateNewChat, setInitiateNewChat] = useState(false);
-  // const newChatUrl = useInitializeChat(initiateNewChat);
-  const [allMessages, setAllMessages] = useState<UnifiedMessageType[]>([]);
+  const [error, setError] = useState<Error>();
+  const [allMessages, setAllMessages] = useState(
+    messagesFromDb?.chatMessages || []
+  );
+
+  const onFinishChat = async () => {
+    // slicing last two messages and sending them to the api to update db
+    const newMessages = messagesRef.current.slice(-2);
+
+    if (newMessages.length > 0) {
+      try {
+        const res = await fetch("/api/users-chats", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            newMessages: newMessages,
+            chatId: currentChatId,
+          }),
+        });
+        // Handle successful update
+        if (res.ok) {
+          console.log(
+            "messages updated successfuly: ",
+            newMessages,
+            "to: ",
+            currentChatId
+          );
+        }
+      } catch (error) {
+        console.error("Failed to update chat messages", error);
+      }
+    }
+  };
   const { messages, input, handleInputChange, handleSubmit, isLoading, stop } =
     useChat({
       api: "/api/chat",
-      onFinish: () => {
-        setChatCompleted(true);
-        setInitiateNewChat(false);
+      onFinish: onFinishChat,
+      onError: (error: Error) => {
+        setError(error);
       },
     });
 
-  useUpdateChatMessages({
-    chatId: currentChatId,
-    messages: messages,
-  });
-
-  // useEffect(() => {
-  //   if (chatCompleted && newChatUrl) {
-  //     console.log("replacing url with newChatUrl");
-
-  //     router.replace(newChatUrl, { scroll: false });
-  //   }
-  // }, [chatCompleted, newChatUrl, router]);
+  const messagesRef = useRef<Message[]>(messages);
+  useEffect(() => {
+    messagesRef.current = messages;
+    console.log("Message in the message ref", messagesRef.current);
+  }, [messages]);
 
   useEffect(() => {
     if (isAutoScrollEnabled && scrollContainerRef.current) {
@@ -76,6 +89,10 @@ export default function Chat({ messagesFromDb, setMessagesFromDb }: ChatProps) {
       scrollContainerRef.current.scrollTop = scrollHeight;
     }
   }, [isAutoScrollEnabled]);
+
+  const displayMessages = useMemo(() => {
+    return [...(messagesFromDb?.chatMessages || []), ...messages];
+  }, [messagesFromDb, messages]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (isLoading) return;
@@ -86,11 +103,7 @@ export default function Chat({ messagesFromDb, setMessagesFromDb }: ChatProps) {
   };
 
   const handleChatSubmit = (e: any) => {
-    // if (!newChatUrl) {
-    //   setInitiateNewChat(true);
-    // }
     handleSubmit(e);
-    setChatCompleted(false);
   };
 
   const handleScroll = () => {
@@ -113,31 +126,6 @@ export default function Chat({ messagesFromDb, setMessagesFromDb }: ChatProps) {
     handleInputChange(e);
   };
 
-  // useEffect(() => {
-  //   setAllMessages(messagesFromDb?.chatMessages || []);
-  // }, [messagesFromDb]);
-
-  // // Append new messages to allMessages
-  // useEffect(() => {
-  //   if (messages.length > 0) {
-  //     const normalizedNewMessages = messages.map((msg) => ({
-  //       id: msg.id, // Ensure the id is unique
-  //       role: msg.role,
-  //       content: msg.content,
-  //       createdAt: new Date(), // Adjust as needed
-  //       chatId: selectedChatId,
-  //     }));
-
-  //     setAllMessages((prevMessages) => [
-  //       ...prevMessages,
-  //       ...normalizedNewMessages,
-  //     ]);
-  //   }
-  // }, [messages, selectedChatId]);
-
-  // // useMemo to optimize the rendering of message list
-  // const displayMessages = useMemo(() => allMessages, [allMessages]);
-
   return (
     <ScrollArea
       type="always"
@@ -150,7 +138,7 @@ export default function Chat({ messagesFromDb, setMessagesFromDb }: ChatProps) {
       <div className="w-full flex  pt-6 pb-20">
         <div className="max-w-[700px] w-full mx-auto">
           <ul className="space-y-4">
-            {messages
+            {displayMessages
               .filter((msg) => msg.role !== "system")
               .map((msg) => (
                 <li

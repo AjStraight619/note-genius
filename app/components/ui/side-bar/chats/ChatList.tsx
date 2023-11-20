@@ -8,7 +8,7 @@ type ChatListProps = {
 };
 
 const ChatList = ({ chats }: ChatListProps) => {
-  const { currentChatId, handleChangeId } = useChatNavigation();
+  const { currentChatId } = useChatNavigation();
 
   return (
     <Flex direction={"column"} gap={"2"}>
@@ -18,7 +18,6 @@ const ChatList = ({ chats }: ChatListProps) => {
             className={`p-1 cursor-pointer rounded-md ${
               currentChatId === chat.id ? "bg-gray-700" : "hover:bg-gray-800"
             }`}
-            onClick={() => handleChangeId(chat.id)}
           >
             {chat.title}
           </div>
