@@ -1,0 +1,17 @@
+.grid-background {
+    width: 300px; /* Adjust to the desired width */
+    height: 400px; /* Adjust to the desired height */
+    background-image: linear-gradient(to right, black 1px, transparent 1px),
+                      linear-gradient(to bottom, black 1px, transparent 1px);
+    background-size: 20px 20px; 
+    position: relative;
+   
+  }
+  .card-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full height of the viewport */
+    margin: auto;
+  }
+  
