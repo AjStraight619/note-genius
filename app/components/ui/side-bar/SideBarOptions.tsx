@@ -2,6 +2,7 @@
 import { deleteChat } from "@/app/chat-actions/chatActions";
 import { useChatNavigation } from "@/context/ChatNavigationContext";
 import { useToast } from "@/context/ToastContext";
+import { ChatMetaData } from "@/types/metaDataTypes";
 import {
   DotsHorizontalIcon,
   Link1Icon,
@@ -10,7 +11,6 @@ import {
 } from "@radix-ui/react-icons";
 import { Flex, IconButton, Popover, Text } from "@radix-ui/themes";
 import { useState } from "react";
-import { Toast } from "../toast/Toast";
 
 const Option = ({ Icon, label, onClick }: any) => (
   <div className="justify-start flex flex-row gap-2">
@@ -21,25 +21,27 @@ const Option = ({ Icon, label, onClick }: any) => (
   </div>
 );
 
-const SideBarOptions = () => {
+type SideBarOptionsProps = {
+  addOptimisticChats: (newChat: ChatMetaData) => void;
+  chats: ChatMetaData[];
+};
+
+const SideBarOptions = ({ addOptimisticChats, chats }: SideBarOptionsProps) => {
   const [open, setOpen] = useState(false);
-  const { currentChatId } = useChatNavigation();
-  const [toastMessage, setToastMessage] = useState("");
+  const { currentChatId, setCurrentChatId } = useChatNavigation();
   const { showToast } = useToast();
+
+  // const removeOptimisticChat = (chatId: string | null) => {
+  //   const updatedChats = chats.filter((chat) => chat.id !== chatId);
+  //   console.log(
+  //     "These are the updated chats after the deletion, ",
+  //     updatedChats
+  //   );
+  //   updatedChats.forEach((chat) => addOptimisticChats(chat));
+  // };
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const testToast = async () => {
-    console.log("test toast called");
-    setToastMessage("Toast Success");
-    handleClose();
-
-    // Set a delay before clearing the toast message
-    setTimeout(() => {
-      setToastMessage("");
-    }, 3000); // Delay of 3000 milliseconds (3 seconds)
   };
 
   const handleLink = () => {
@@ -51,21 +53,29 @@ const SideBarOptions = () => {
   };
 
   const handleDelete = async () => {
+    const toastProps = {
+      title: "Chat Deleted",
+      content: "Toast Success",
+      duration: 3000,
+    };
     try {
+      console.log("In try for delete");
+      // removeOptimisticChat(currentChatId);
       const deletedChat = await deleteChat(currentChatId);
       if (deletedChat) {
-        setToastMessage(`Successfully deleted ${deletedChat.title}`);
-        // Trigger the toast here with the title
+        showToast(toastProps);
+        handleClose();
       }
     } catch (error) {
-      // Handle any errors, perhaps set a different toast message
+      console.log("in the error function");
+      console.log(error);
     }
   };
 
   const options = [
     { Icon: Link1Icon, label: "Link", onClick: handleLink },
     { Icon: Pencil1Icon, label: "Edit", onClick: handleEdit },
-    { Icon: TrashIcon, label: "Delete", onClick: testToast },
+    { Icon: TrashIcon, label: "Delete", onClick: handleDelete },
   ];
 
   return (
@@ -84,10 +94,6 @@ const SideBarOptions = () => {
           </Flex>
         </Popover.Content>
       </Popover.Root>
-
-      {toastMessage && (
-        <Toast title="Chat Deleted" content={toastMessage} duration={3000} />
-      )}
     </>
   );
 };

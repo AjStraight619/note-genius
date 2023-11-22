@@ -62,8 +62,9 @@ export const deleteChat = async (chatId: string | null) => {
     },
     select: {
       title: true,
+      id: true,
     },
   });
-  revalidatePath("/chat");
+  revalidatePath(`/chat`);
   return deletedChat;
 };

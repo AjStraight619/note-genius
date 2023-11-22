@@ -14,6 +14,8 @@ import {
 import { useChatNavigation } from "@/context/ChatNavigationContext";
 import { ChatWithMessages } from "@/types/chatTypes";
 
+// export const dynamic = "force-dynamic";
+
 type SideBarProps = {
   chats?: ChatMetaData[];
   folders?: FolderMetaData[];

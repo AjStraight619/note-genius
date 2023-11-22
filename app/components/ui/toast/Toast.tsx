@@ -12,7 +12,7 @@ export const Toast = ({ title, content, children, ...props }: ToastProps) => {
     <ToastPrimitive.Provider>
       <ToastPrimitive.Root
         {...props}
-        className="bg-white p-4 rounded-lg shadow-md max-w-md mx-auto"
+        className="p-4 rounded-lg shadow-md max-w-md mx-auto"
       >
         {title && (
           <ToastPrimitive.Title className="text-lg font-bold mb-2">
@@ -35,7 +35,7 @@ export const Toast = ({ title, content, children, ...props }: ToastProps) => {
         </ToastPrimitive.Close>
       </ToastPrimitive.Root>
 
-      <ToastPrimitive.Viewport className="fixed bottom-10 right-0" />
+      <ToastPrimitive.Viewport className="fixed bottom-10 right-10" />
     </ToastPrimitive.Provider>
   );
 };

@@ -93,7 +93,9 @@ const Sidebar = ({ chats, addOptimisticChats }: SideBarProps) => {
           <Text className="text-gray-300 text-sm">{activeTab}</Text>
 
           <Separator size={"4"} mb={"3"} className="bg-gray-600" />
-          {activeTab === "Chats" && chats && <ChatList chats={chats} />}
+          {activeTab === "Chats" && chats && (
+            <ChatList addOptimisticChats={addOptimisticChats} chats={chats} />
+          )}
           {/* {activeTab === "folders" && folders && <FolderList />} */}
           {/* {activeTab === "files" && files && <LinkList  />} */}
         </Flex>
