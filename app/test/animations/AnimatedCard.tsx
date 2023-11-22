@@ -5,17 +5,16 @@ import { MyComponent as Chain } from "./Chain";
 
 export function CardComponent() {
   // Define the animation for the blue lines
-  const animatedStyle = useSpring({
-    loop: true,
-    to: [{ boxShadow: "0 0 10px 3px blue" }, { boxShadow: "0 0 0 3px blue" }],
-    from: { boxShadow: "0 0 0 3px blue" },
-    config: { duration: 2000 },
-  });
+  // const animatedStyle = useSpring({
+  //   to: [{ boxShadow: "0 0 10px 3px blue" }, { boxShadow: "0 0 0 3px blue" }],
+  //   from: { boxShadow: "0 0 0 3px blue" },
+  //   config: { duration: 2000 },
+  // });
 
   const [springs, api] = useSpring(() => ({
     loop: true,
     from: {
-      x: 0,
+      x: 100,
       y: 100,
     },
     to: {
@@ -29,7 +28,7 @@ export function CardComponent() {
     api.start({
       from: {
         x: 0,
-        y: 100,
+        y: 0,
       },
       to: [
         {
@@ -60,9 +59,8 @@ export function CardComponent() {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             className="grid-background"
-            style={animatedStyle}
           >
-            <animated.line
+            <animated.div
               style={{
                 height: "1px",
                 backgroundColor: "blue",
@@ -70,7 +68,7 @@ export function CardComponent() {
 
                 ...springs,
               }}
-            ></animated.line>
+            ></animated.div>
           </animated.div>
         </Card>
       </div>

@@ -1,5 +1,4 @@
 import {
-  animated,
   useChain,
   useSpring,
   useSpringRef,
@@ -27,25 +26,27 @@ export function MyComponent() {
   useChain([springRef, transRef]);
 
   return (
-    <animated.div
-      style={{
-        height: springs.size,
-        width: springs.size,
-        background: "blue",
-      }}
-    >
-      {transitions((style, item) => (
-        <animated.div
-          style={{
-            width: "120px",
-            height: "120px",
-            background: "green",
-            ...style,
-          }}
-        >
-          {item}
-        </animated.div>
-      ))}
-    </animated.div>
+    <div></div>
+    //   <animated.div
+    //     style={{
+    //       height: springs.size,
+    //       width: springs.size,
+    //       background: "blue",
+    //     }}
+    //   >
+    //     {transitions((style, item) => (
+    //       <animated.div
+    //         style={{
+    //           width: "120px",
+    //           height: "120px",
+    //           background: "green",
+    //           ...style,
+    //         }}
+    //       >
+    //         {item}
+    //       </animated.div>
+    //     ))}
+    //   </animated.div>
+    // );
   );
 }
