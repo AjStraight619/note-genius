@@ -16,4 +16,8 @@
     background-color: #000000;
     position: relative;
   }
+
+  .glowing-line {
+    box-shadow: 0 0 10px rgba(75, 0, 130, 0.5); /* Adjust color and blur radius as needed */
+  }
   
