@@ -36,6 +36,10 @@ const ChatDashboard = ({ chats }: SideBarProps) => {
   );
 
   useEffect(() => {
+    console.log("optimistic chat added: ", optimisticChats);
+  }, [optimisticChats]);
+
+  useEffect(() => {
     const getChatMessagesById = async () => {
       try {
         const response = await fetch(

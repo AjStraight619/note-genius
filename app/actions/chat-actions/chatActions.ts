@@ -5,6 +5,7 @@ import { authOptions } from "@/utils/authOptions";
 import { User } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export const getChatMetaData = async (userId: string) => {
   const chatMetaData = prisma.chat.findMany({
@@ -42,7 +43,7 @@ export const addChat = async (formData: FormData) => {
     },
   });
   revalidatePath("/chat");
-  return newChat;
+  redirect(`/chat/${newChat.id}`);
 };
 
 export const deleteChat = async (chatId: string | null) => {
