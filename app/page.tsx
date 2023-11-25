@@ -182,12 +182,12 @@ export default async function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-black p-24">
-      <Navbar /> {/* Assuming Navbar is positioned absolutely or fixed */}
+      <Navbar />
       <div className="z-10 flex w-full max-w-5xl flex-col items-center justify-between font-mono text-sm">
         <HeroSection />
         <FeaturesSection />
         <TechnologyStack />
-        {/* Uncomment and define these when you have the content ready */}
+
         {/* <HowItWorks /> */}
         {/* <Testimonials /> */}
         <FinalCallToAction />
