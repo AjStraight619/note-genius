@@ -10,6 +10,8 @@ import "./styles.css";
 
 import { useChatNavigation } from "@/context/ChatNavigationContext";
 import { Message } from "ai";
+import FileOptions from "../files/FileOptions";
+import FileSelection from "../files/FileSelection";
 
 type ChatProps = {
   currentChatId: string | null;
@@ -33,10 +35,6 @@ export default function Chat({ messagesFromDb, setMessagesFromDb }: ChatProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isAutoScrollEnabled, setIsAutoScrollEnabled] = useState(true);
   const { data: session } = useSession();
-  const [error, setError] = useState<Error>();
-  const [allMessages, setAllMessages] = useState(
-    messagesFromDb?.chatMessages || []
-  );
 
   const onFinishChat = async () => {
     // slicing last two messages and sending them to the api to update db
@@ -72,9 +70,6 @@ export default function Chat({ messagesFromDb, setMessagesFromDb }: ChatProps) {
     useChat({
       api: "/api/chat",
       onFinish: onFinishChat,
-      onError: (error: Error) => {
-        setError(error);
-      },
     });
 
   const messagesRef = useRef<Message[]>(messages);
@@ -162,9 +157,12 @@ export default function Chat({ messagesFromDb, setMessagesFromDb }: ChatProps) {
       <div className="absolute bottom-0 w-full pt-8 md:border-t-0 px-4">
         <div className="flex justify-center items-center ml-2">
           <form
-            className="items-stretch mx-2 flex flex-row last:mb-2 md:mx-4 md:last:mb-6 lg:max-w-2xl xl:max-w-3xl flex-1 md:pr-4"
+            className="items-stretch mx-2 flex flex-row last:mb-2 md:mx-4 md:last:mb-6 lg:max-w-2xl xl:max-w-3xl flex-1 md:pr-4 gap-4"
             onSubmit={handleChatSubmit}
           >
+            <div className="items-center justify-center mt-5">
+              <FileOptions />
+            </div>
             <div className="relative flex h-full flex-1 items-stretch md:flex-col">
               <div className="flex w-full items-center focus:ring-2">
                 <textarea
@@ -184,6 +182,10 @@ export default function Chat({ messagesFromDb, setMessagesFromDb }: ChatProps) {
                   onKeyDown={handleKeyDown}
                   tabIndex={0}
                 />
+
+                <div className="absolute bottom-5 left-2">
+                  <FileSelection />
+                </div>
 
                 <div className="absolute bottom-4 right-2">
                   <IconButton

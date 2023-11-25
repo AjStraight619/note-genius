@@ -1,8 +1,10 @@
 "use client";
-import { deleteChat } from "@/app/chat-actions/chatActions";
+import {
+  deleteChat,
+  getMostRecentChatAfterDeletion,
+} from "@/app/actions/chat-actions/chatActions";
 import { useChatNavigation } from "@/context/ChatNavigationContext";
 import { useToast } from "@/context/ToastContext";
-import { ChatMetaData } from "@/types/metaDataTypes";
 import {
   DotsHorizontalIcon,
   Link1Icon,
@@ -10,6 +12,7 @@ import {
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { Flex, IconButton, Popover, Text } from "@radix-ui/themes";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const Option = ({ Icon, label, onClick }: any) => (
@@ -21,24 +24,11 @@ const Option = ({ Icon, label, onClick }: any) => (
   </div>
 );
 
-type SideBarOptionsProps = {
-  addOptimisticChats: (newChat: ChatMetaData) => void;
-  chats: ChatMetaData[];
-};
-
-const SideBarOptions = ({ addOptimisticChats, chats }: SideBarOptionsProps) => {
+const SideBarOptions = () => {
   const [open, setOpen] = useState(false);
   const { currentChatId, setCurrentChatId } = useChatNavigation();
   const { showToast } = useToast();
-
-  // const removeOptimisticChat = (chatId: string | null) => {
-  //   const updatedChats = chats.filter((chat) => chat.id !== chatId);
-  //   console.log(
-  //     "These are the updated chats after the deletion, ",
-  //     updatedChats
-  //   );
-  //   updatedChats.forEach((chat) => addOptimisticChats(chat));
-  // };
+  const router = useRouter();
 
   const handleClose = () => {
     setOpen(false);
@@ -53,22 +43,43 @@ const SideBarOptions = ({ addOptimisticChats, chats }: SideBarOptionsProps) => {
   };
 
   const handleDelete = async () => {
-    const toastProps = {
+    const deleteSuccessToastProps = {
       title: "Chat Deleted",
       content: "Toast Success",
       duration: 3000,
     };
+    const deleteFailedToastProps = {
+      title: "Failed to Delete Chat",
+      content: "Failed",
+      duration: 3000,
+    };
+
     try {
-      console.log("In try for delete");
-      // removeOptimisticChat(currentChatId);
       const deletedChat = await deleteChat(currentChatId);
       if (deletedChat) {
-        showToast(toastProps);
-        handleClose();
+        showToast(deleteSuccessToastProps);
+        const nextMostRecentChat = await getMostRecentChatAfterDeletion();
+        if (nextMostRecentChat && nextMostRecentChat.id) {
+          setCurrentChatId(nextMostRecentChat.id);
+          router.push(`/chat/${nextMostRecentChat.id}`);
+        } else {
+          // In case there are no more chats after deletion
+          setCurrentChatId(null);
+          router.push("/chat");
+        }
+      } else {
+        showToast(deleteFailedToastProps);
+        setCurrentChatId(null);
+        router.push("/chat");
       }
     } catch (error) {
-      console.log("in the error function");
-      console.log(error);
+      console.log("Error in deleting chat:", error);
+      showToast(deleteFailedToastProps);
+    } finally {
+      // Delay closing the options to allow the toast to be seen
+      setTimeout(() => {
+        handleClose();
+      }, 3000); // Delay matches the toast duration
     }
   };
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { addChat } from "@/app/chat-actions/chatActions";
+import { addChat } from "@/app/actions/chat-actions/chatActions";
 import { ChatMetaData } from "@/types/metaDataTypes";
 import { Cross2Icon, PlusIcon } from "@radix-ui/react-icons";
 import {
@@ -66,7 +66,9 @@ const AddChat = ({ addOptimisticChats }: AddChatProps) => {
               value={chatTitle}
               onChange={(e) => setChatTitle(e.target.value)}
             />
-            <SubmitButton>Add Chat</SubmitButton>
+            <div className="flex justify-center items-center mt-3">
+              <SubmitButton>Add Chat</SubmitButton>
+            </div>
           </form>
         </Flex>
 

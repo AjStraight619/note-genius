@@ -29,6 +29,9 @@ export async function GET(req: NextRequest) {
     include: {
       chatMessages: true,
     },
+    orderBy: {
+      updatedAt: "desc",
+    },
   });
 
   return chatMessages

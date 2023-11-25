@@ -1,6 +1,7 @@
-import { getChatMetaData } from "@/app/chat-actions/chatActions";
+import { getChatMetaData } from "@/app/actions/chat-actions/chatActions";
 import ChatDashboard from "@/app/components/chat/ChatDashboard";
 import { ChatNavigationProvider } from "@/context/ChatNavigationContext";
+import { FileProvider } from "@/context/FileSelectionProvider";
 import { ToastProvider } from "@/context/ToastContext";
 import { authOptions } from "@/utils/authOptions";
 import { User } from "@prisma/client";
@@ -19,7 +20,9 @@ const Chat = async ({ params }: { params: { chatId: string } }) => {
     const user = session.user as User;
     userId = user.id;
     try {
+      console.log("Revalidated path after deleting");
       chatMetaData = await getChatMetaData(userId);
+      console.log("chat meta data", chatMetaData);
     } catch (error) {
       console.log(error);
     }
@@ -34,16 +37,18 @@ const Chat = async ({ params }: { params: { chatId: string } }) => {
 
   return (
     <ChatNavigationProvider>
-      <ToastProvider>
-        <Flex
-          direction={"row"}
-          position={"relative"}
-          height={"100%"}
-          width={"100%"}
-        >
-          <ChatDashboard chats={chatMetaData || []} />
-        </Flex>
-      </ToastProvider>
+      <FileProvider>
+        <ToastProvider>
+          <Flex
+            direction={"row"}
+            position={"relative"}
+            height={"100%"}
+            width={"100%"}
+          >
+            <ChatDashboard chats={chatMetaData || []} />
+          </Flex>
+        </ToastProvider>
+      </FileProvider>
     </ChatNavigationProvider>
   );
 };

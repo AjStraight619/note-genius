@@ -1,11 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/utils/authOptions";
 import { User } from "@prisma/client";
-import { Card, Container, Flex, Text } from "@radix-ui/themes";
+import { EnterIcon } from "@radix-ui/react-icons";
+import { Button, Card, Flex, Text } from "@radix-ui/themes";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import styles from "./animations.module.css";
-import { LogInButton } from "./components/auth/auth";
 import Navbar from "./components/ui/navbar/Navbar";
 
 type FeatureSectionProps = {
@@ -34,6 +35,9 @@ const FeatureSection = ({
 
 const getMostRecentChat = async (userId: string | undefined) => {
   "use server";
+  if (!userId) {
+    redirect("/api/auth/signin");
+  }
   const mostRecentChat = prisma.chat.findFirst({
     where: {
       userId: userId,
@@ -63,53 +67,50 @@ export default async function Home() {
 
   const mostRecentChat = await getMostRecentChat(userId);
 
-  // Maybe call redirect here on the most recent chat?
-  console.log("This is the most recent chat", mostRecentChat);
   return (
     <>
-      <Navbar />
-      <Container size={"4"} mx={"auto"} my={"9"} px={"2"}>
-        <Flex
-          direction="row"
-          gap={"6"}
-          justify={"center"}
-          align={"center"}
-          wrap={"wrap"}
-        >
-          {/* Feature Sections */}
+      <Flex direction={"column"} gap={"4"} height={"100%"}>
+        <Navbar />
 
-          <FeatureSection
-            title="🗂 Note Organization"
-            description="Organize your notes in folders with tag and search functionalities."
-            dynamic // This will have the dynamic background
-          />
-          <FeatureSection
-            title="🤖 GPT-4 Integration"
-            description="Utilize GPT-4 for rephrasing, summarizing, and expanding notes."
-          />
-          <FeatureSection
-            title="➗ Math Tutor"
-            description="Solve math problems with Symbolab/Wolfram Alpha and get detailed explanations from GPT-4."
-          />
-          <FeatureSection
-            title="📝 Handwritten Notes"
-            description="Upload and convert handwritten notes to text using Google Vision API."
-          />
-          <FeatureSection
-            title="📤 Exportable Notes"
-            description="Export notes in various formats for easy sharing and organizing."
-          />
-          {/* ... Other FeatureSections */}
+        <Flex justify={"center"} align={"center"} mb={"5"}>
+          <Card className="shadow-indigo-900 shadow-lg">
+            <div className="flex justify-center items-center h-full w-full">
+              <div className="relative p-4 max-w-xl text-center">
+                <h1 className="text-white text-4xl font-bold mb-2">
+                  Streamline Your Note-Taking
+                </h1>
+                <p className="text-white text-lg">
+                  Elevate productivity with our AI-powered note organization and
+                  math problem-solving tools. Convert handwritten notes to text
+                  and easily share your ideas in various formats.
+                </p>
+
+                <div className="flex mt-4 gap-5 justify-center">
+                  {session ? (
+                    <Button size={"3"}>
+                      <Link href={`/chat/${mostRecentChat?.id}`}>
+                        <div className="flex flex-row justify-center items-center gap-2">
+                          Chats
+                          <EnterIcon />
+                        </div>
+                      </Link>
+                    </Button>
+                  ) : (
+                    <Button size={"3"}>
+                      <Link href={`/api/auth/signin`} />
+                      Sign up
+                      <EnterIcon />
+                    </Button>
+                  )}
+                  <Button size={"3"} variant={"outline"}>
+                    Learn More
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </Card>
         </Flex>
-
-        {!session && (
-          <Flex justify="center" mt={"9"}>
-            <LogInButton />
-          </Flex>
-        )}
-
-        <Link href={`/chat/${mostRecentChat?.id}`}>Go to chats</Link>
-      </Container>
+      </Flex>
     </>
   );
 }

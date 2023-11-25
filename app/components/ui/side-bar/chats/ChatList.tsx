@@ -6,12 +6,10 @@ import SideBarOptions from "../SideBarOptions";
 
 type ChatListProps = {
   chats: ChatMetaData[];
-  addOptimisticChats: (newChat: ChatMetaData) => void;
 };
 
-const ChatList = ({ chats, addOptimisticChats }: ChatListProps) => {
+const ChatList = ({ chats }: ChatListProps) => {
   const { currentChatId } = useChatNavigation();
-  console.log("These are the current chats: ", chats);
 
   return (
     <Flex direction={"column"} gap={"2"}>
@@ -23,13 +21,8 @@ const ChatList = ({ chats, addOptimisticChats }: ChatListProps) => {
             }`}
           >
             <Flex justify={"between"} align={"center"}>
-              {chat.title}{" "}
-              {currentChatId === chat.id ? (
-                <SideBarOptions
-                  chats={chats}
-                  addOptimisticChats={addOptimisticChats}
-                />
-              ) : null}
+              {chat.title}
+              {currentChatId === chat.id ? <SideBarOptions /> : null}
             </Flex>
           </div>
         </Link>

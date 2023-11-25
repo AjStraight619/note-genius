@@ -20,6 +20,8 @@ export const getChatMetaData = async (userId: string) => {
     },
   });
 
+  revalidatePath("/chat");
+
   return chatMetaData;
 };
 
@@ -55,16 +57,54 @@ export const deleteChat = async (chatId: string | null) => {
   const user = session.user as User;
   const userId = user.id;
 
-  const deletedChat = await prisma.chat.delete({
+  // Start a transaction
+  const result = await prisma.$transaction(async (prisma) => {
+    // First, delete all related ChatMessage records
+    await prisma.chatMessage.deleteMany({
+      where: {
+        chatId: chatId,
+        // If necessary, add additional conditions here
+      },
+    });
+
+    // Then, delete the Chat record
+    return await prisma.chat.delete({
+      where: {
+        id: chatId,
+        userId: userId,
+      },
+      select: {
+        title: true,
+        id: true,
+      },
+    });
+  });
+
+  revalidatePath(`/chat`);
+  return result;
+};
+
+export const getMostRecentChatAfterDeletion = async () => {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return;
+  }
+
+  const user = session.user as User;
+  const userId = user.id;
+  const mostRecentChat = prisma.chat.findFirst({
     where: {
-      id: chatId,
       userId: userId,
     },
+
+    orderBy: {
+      updatedAt: "desc",
+    },
+
     select: {
-      title: true,
       id: true,
     },
   });
-  revalidatePath(`/chat`);
-  return deletedChat;
+
+  return mostRecentChat;
 };
