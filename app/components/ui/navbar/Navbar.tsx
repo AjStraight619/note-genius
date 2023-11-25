@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const Navbar = async () => {
   return (
-    <Box width={"100%"} className="border-b border-gray-600 h-16">
+    <Box width={"100%"} className="border-b border-gray-600 h-16 fixed top-0">
       <Flex
         justify={"between"}
         align={"center"}
