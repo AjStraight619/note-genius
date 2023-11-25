@@ -1,6 +1,5 @@
 import * as ToastPrimitive from "@radix-ui/react-toast";
 
-// Assuming ToastPrimitive.Root accepts a type like ToastRootProps
 export type ToastProps = ToastPrimitive.ToastProps & {
   title: string;
   content: string;
