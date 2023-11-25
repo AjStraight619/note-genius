@@ -35,6 +35,9 @@ const ChatDashboard = ({ chats }: SideBarProps) => {
     }
   );
 
+  const [optimisticFileContentForChat, addOptimisticFileContentForChat] =
+    useOptimistic(chats);
+
   useEffect(() => {
     console.log("optimistic chat added: ", optimisticChats);
   }, [optimisticChats]);

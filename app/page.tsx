@@ -179,9 +179,12 @@ export default async function Home() {
   }
 
   const mostRecentChat = await getMostRecentChat(userId);
+  if (mostRecentChat && mostRecentChat?.id) {
+    redirect(`/chat/${mostRecentChat?.id}`);
+  }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-black p-24">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-black p-24 relative">
       <Navbar />
       <div className="z-10 flex w-full max-w-5xl flex-col items-center justify-between font-mono text-sm">
         <HeroSection />

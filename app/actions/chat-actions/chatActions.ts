@@ -109,3 +109,35 @@ export const getMostRecentChatAfterDeletion = async () => {
 
   return mostRecentChat;
 };
+
+export const addFileToChat = async (
+  formData: FormData,
+  chatId: string | null
+) => {
+  if (!chatId) {
+    throw new Error("Chat ID is required");
+  }
+
+  const session = await getServerSession(authOptions);
+  if (!session || !session.user) {
+    throw new Error("Session not found");
+  }
+
+  const fileContents: string[] = formData.getAll("fileContents") as string[];
+  const fileNames: string[] = formData.getAll("fileNames") as string[];
+
+  const chatMessageCreationPromises = fileContents.map((content) => {
+    return prisma.chatMessage.create({
+      data: {
+        content: content,
+        chatId: chatId,
+        role: "user",
+        fileContent: true,
+      },
+    });
+  });
+
+  const createdChatMessages = await Promise.all(chatMessageCreationPromises);
+  revalidatePath(`/chat/${chatId}`);
+  return createdChatMessages;
+};

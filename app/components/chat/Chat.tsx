@@ -18,6 +18,12 @@ type ChatProps = {
   messagesFromDb: ChatWithMessages | null;
   setMessagesFromDb: React.Dispatch<SetStateAction<ChatWithMessages | null>>;
 };
+
+type useAIInitialChatMessagesProps = {
+  currentChatId: string | null;
+  messagesFromDb: ChatWithMessages | null;
+  setInitialSystemMessageInput: React.Dispatch<SetStateAction<string | null>>;
+};
 const SCROLL_THRESHOLD = 100;
 
 function adjustTextAreaHeight(textArea: any) {
@@ -35,6 +41,9 @@ export default function Chat({ messagesFromDb, setMessagesFromDb }: ChatProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isAutoScrollEnabled, setIsAutoScrollEnabled] = useState(true);
   const { data: session } = useSession();
+  const [initialSystemMessageInput, setInitialSystemMessageInput] = useState<
+    string | null
+  >(null);
 
   const onFinishChat = async () => {
     // slicing last two messages and sending them to the api to update db
@@ -69,13 +78,13 @@ export default function Chat({ messagesFromDb, setMessagesFromDb }: ChatProps) {
   const { messages, input, handleInputChange, handleSubmit, isLoading, stop } =
     useChat({
       api: "/api/chat",
+      initialInput: "",
       onFinish: onFinishChat,
     });
 
   const messagesRef = useRef<Message[]>(messages);
   useEffect(() => {
     messagesRef.current = messages;
-    console.log("Message in the message ref", messagesRef.current);
   }, [messages]);
 
   useEffect(() => {
@@ -207,3 +216,23 @@ export default function Chat({ messagesFromDb, setMessagesFromDb }: ChatProps) {
     </ScrollArea>
   );
 }
+
+const useAIInitialChatMessages = ({
+  currentChatId,
+  messagesFromDb,
+  setInitialSystemMessageInput,
+}: useAIInitialChatMessagesProps) => {
+  useEffect(() => {
+    const messagesForInitialInput = messagesFromDb?.chatMessages
+      .filter((msg) => msg.fileContent)
+      .map((msg) => msg.content);
+
+    if (messagesForInitialInput && messagesForInitialInput.length > 0) {
+      // Concatenate messages into a single string
+      const concatenatedMessages = messagesForInitialInput.join(" ");
+      setInitialSystemMessageInput(concatenatedMessages);
+    } else {
+      setInitialSystemMessageInput(null);
+    }
+  }, [messagesFromDb, setInitialSystemMessageInput]);
+};

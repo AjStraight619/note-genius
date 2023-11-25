@@ -27,7 +27,11 @@ export async function GET(req: NextRequest) {
       userId: userId,
     },
     include: {
-      chatMessages: true,
+      chatMessages: {
+        orderBy: {
+          updatedAt: "asc",
+        },
+      },
     },
     orderBy: {
       updatedAt: "desc",

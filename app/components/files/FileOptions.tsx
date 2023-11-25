@@ -1,3 +1,5 @@
+import { addFileToChat } from "@/app/actions/chat-actions/chatActions";
+import { useChatNavigation } from "@/context/ChatNavigationContext";
 import { useFileContext } from "@/context/FileSelectionProvider";
 import { StackIcon } from "@radix-ui/react-icons";
 import { Button, Dialog, Flex, IconButton, Text } from "@radix-ui/themes";
@@ -13,8 +15,10 @@ type FileOptionsButtonProps = {
 
 const FileOptions = () => {
   const { fileDispatch, fileState } = useFileContext();
+  const { currentChatId } = useChatNavigation();
   const [open, setOpen] = useState(false);
   const [processingFiles, setProcessingFiles] = useState(false);
+
   const handleOpenChange = () => {
     if (open) {
       setOpen(false);
@@ -25,24 +29,48 @@ const FileOptions = () => {
   };
 
   const handleProcessFiles = async () => {
+    console.log("in handle process files");
     const formData = new FormData();
-
-    fileState.files.forEach((file) => {
-      if (file.file && file.type !== "text/plain") {
-        formData.append("files", file.file, file.name);
-        formData.append("fileIds", file.id);
-      }
+    const fileReadPromises: Promise<void>[] = fileState.files.map((file) => {
+      console.log("File details:", file.file, file.file?.type);
+      // Return a promise for the file read operation
+      return new Promise<void>((resolve, reject) => {
+        // Make sure the file object exists before attempting to read it
+        if (file.file && file.file.type === "text/plain") {
+          console.log("in first if statement");
+          const reader = new FileReader();
+          reader.onload = () => {
+            // Ensure the result is a string
+            if (typeof reader.result === "string") {
+              console.log(reader.result);
+              formData.append("fileContents", reader.result);
+              formData.append("fileNames", file.name);
+              formData.append("fileIds", file.id);
+              resolve();
+            } else {
+              reject(new Error("FileReader result is not a string."));
+            }
+          };
+          reader.onerror = () => reject(reader.error);
+          reader.readAsText(file.file);
+        } else {
+          resolve();
+        }
+      });
     });
 
     setProcessingFiles(true);
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    const res = await fetch("/api/files/process-files", {
-      method: "POST",
-      body: formData,
-    });
-    const data = await res.json();
-    setProcessingFiles(false);
-    console.log(data);
+
+    try {
+      await Promise.all(fileReadPromises);
+
+      const response = await addFileToChat(formData, currentChatId);
+      console.log(response);
+    } catch (error) {
+      console.error("Error processing files:", error);
+    } finally {
+      setProcessingFiles(false);
+    }
   };
 
   return (
@@ -54,9 +82,9 @@ const FileOptions = () => {
         style={{ width: "400px", height: "400px" }}
         className="h-full flex flex-col relative"
       >
-        <div className="flex justify-center items-center">
-          <Dialog.Title>File Options</Dialog.Title>
-        </div>
+        <Dialog.Title className="flex justify-center items-center">
+          File Options
+        </Dialog.Title>
 
         <Flex
           direction={"column"}
