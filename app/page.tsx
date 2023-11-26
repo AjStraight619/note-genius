@@ -11,11 +11,6 @@ type FeatureCardProps = {
   description: string;
 };
 
-type OtherCardProps = {
-  name: string;
-  description: string;
-};
-
 const HeroSection = () => (
   <div className="relative flex items-center justify-center py-20 overflow-hidden">
     <div className="text-center">
@@ -33,21 +28,16 @@ const HeroSection = () => (
         The ultimate note-taking solution that leverages AI to enhance your
         productivity.
       </p>
-      <Link
-        href="/get-started"
-        className="mt-6 inline-flex items-center bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 ease-in-out"
-      >
-        Get Started
-        <ChevronRightIcon className="w-6 h-6 ml-2" />
-      </Link>
     </div>
   </div>
 );
 
 const FeaturesSection = () => (
-  <div className=" text-white py-12">
+  <div className="text-white py-12">
     <div className="max-w-6xl mx-auto px-4">
-      <h2 className="text-3xl font-bold text-center mb-8">Features</h2>
+      <h2 className="text-3xl font-bold text-center mb-8">
+        What is Note Genius?
+      </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <FeatureCard
           title="Note Organization"
@@ -71,61 +61,13 @@ const FeaturesSection = () => (
 );
 
 const FeatureCard = ({ title, description }: FeatureCardProps) => (
-  <div className="bg-gray-700 rounded-lg p-6">
+  <div className="bg-black border border-slate-600 rounded-lg p-6 h-64 hover:cursor-pointer">
+    {" "}
+    {/* Adjust height as needed */}
     <h3 className="text-xl font-semibold mb-3">{title}</h3>
     <p>{description}</p>
   </div>
 );
-
-const TechnologyStack = () => (
-  <div className="text-white py-12">
-    <div className="max-w-6xl mx-auto px-4">
-      <h2 className="text-3xl font-bold text-center mb-8">Technology Stack</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        {/* List of technologies used */}
-        <TechCard
-          name="Next.js"
-          description="The React framework for production."
-        />
-        <TechCard
-          name="TypeScript"
-          description="Strongly typed programming language that builds on JavaScript."
-        />
-        <TechCard
-          name="Prisma"
-          description="Next-generation ORM for Node.js and TypeScript."
-        />
-        <TechCard
-          name="MySQL"
-          description="One of the most popular databases."
-        />
-        <TechCard name="PlanetScale" description="Database scaling solution." />
-      </div>
-    </div>
-  </div>
-);
-
-const TechCard = ({ name, description }: OtherCardProps) => (
-  <div className="bg-gray-700 rounded-lg p-6">
-    <h3 className="text-xl font-semibold mb-3">{name}</h3>
-    <p>{description}</p>
-  </div>
-);
-
-// HowItWorks component
-// const HowItWorks = () => (
-//   // ... Replace this with your actual How it works JSX
-//   return (
-//     <div>
-//       Hello
-//     </div>
-//   )
-// );
-
-// // Testimonials component
-// const Testimonials = () => (
-//   // ... Replace this with your actual Testimonials JSX
-// );
 
 // FinalCallToAction component
 const FinalCallToAction = () => (
@@ -186,7 +128,7 @@ export default async function Home() {
       <div className="z-10 flex w-full max-w-5xl flex-col items-center justify-between font-mono text-sm">
         <HeroSection />
         <FeaturesSection />
-        <TechnologyStack />
+        {/* <TechnologyStack /> */}
 
         {/* <HowItWorks /> */}
         {/* <Testimonials /> */}
