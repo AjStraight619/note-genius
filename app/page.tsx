@@ -149,7 +149,7 @@ const FinalCallToAction = () => (
 const getMostRecentChat = async (userId: string | undefined) => {
   "use server";
   if (!userId) {
-    redirect("/api/auth/signin");
+    redirect("/register");
   }
   const mostRecentChat = prisma.chat.findFirst({
     where: {
