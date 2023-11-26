@@ -20,6 +20,7 @@ import {
 import { useState } from "react";
 import ChatList from "./chats/ChatList";
 
+import Link from "next/link";
 import AddChat from "./chats/AddChat";
 
 type SideBarProps = {
@@ -43,6 +44,7 @@ const Sidebar = ({ chats, addOptimisticChats }: SideBarProps) => {
         pr={"6"}
         mb={"4"}
       >
+        <Link href={"/"}>Home</Link>
         <AddChat addOptimisticChats={addOptimisticChats} />
 
         <IconButton variant="soft">
