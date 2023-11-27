@@ -56,7 +56,7 @@ const FeaturesSection = (): JSX.Element => (
         />
         <FeatureCard
           title="Math Tutor"
-          description="Solve math problems with step-by-step explanations from Symbolab or Wolfram Alpha."
+          description="Get answers to your math problems with Wolfram Alpha, and utilize GPT-4 for explanations on problem solving steps."
         />
         <FeatureCard
           title="Handwritten Notes"
@@ -74,7 +74,7 @@ const FeaturesSection = (): JSX.Element => (
  */
 
 const FeatureCard = ({ title, description }: FeatureCardProps): JSX.Element => (
-  <div className="bg-black border border-slate-600 rounded-lg p-6 h-64 hover:cursor-pointer shadow-lg shadow-indigo-950">
+  <div className="bg-black border border-slate-600 rounded-lg p-6 h-64 hover:cursor-pointer shadow-lg shadow-indigo-950 max-w-sm">
     {" "}
     {/* Adjust height as needed */}
     <h3 className="text-xl font-semibold mb-3">{title}</h3>
@@ -110,8 +110,9 @@ export default async function Home() {
   if (session) {
     const user = session.user as User;
     userName = user.name;
-    userId = user.id;
+    userId = user.id as unknown as string;
   }
+  console.log("This is the userId on the homepage: ", userId);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-black p-24 relative">

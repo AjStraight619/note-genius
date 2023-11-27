@@ -3,11 +3,12 @@ import { Box, Flex } from "@radix-ui/themes";
 import Link from "next/link";
 
 type NavbarProps = {
-  userName: string | null;
+  userName: string;
   userId: string | null;
 };
 
 const Navbar = ({ userName, userId }: NavbarProps) => {
+  console.log("This is the userId in the navbar", userId);
   return (
     <Box
       width={"100%"}

@@ -32,6 +32,7 @@ const DropdownItem = ({ icon, label, href }: DropDownItemProps) => (
 
 const UserOptions = ({ userName, userId }: UserOptionsProps) => {
   const [mostRecentChatId, setMostRecentChatId] = useState(null);
+  console.log("This is the userId in userOptions", userId);
 
   useEffect(() => {
     const getMostRecentChatId = async () => {
