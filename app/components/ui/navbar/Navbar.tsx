@@ -2,7 +2,12 @@ import UserOptions from "@/app/components/users/UserOptions";
 import { Box, Flex } from "@radix-ui/themes";
 import Link from "next/link";
 
-const Navbar = async () => {
+type NavbarProps = {
+  userName: string | null;
+  userId: string | null;
+};
+
+const Navbar = ({ userName, userId }: NavbarProps) => {
   return (
     <Box
       width={"100%"}
@@ -19,7 +24,7 @@ const Navbar = async () => {
           <Link href={"/"}>Home</Link>
         </div>
         <div className="just-end">
-          <UserOptions />
+          <UserOptions userName={userName} userId={userId} />
           {"            "}
         </div>
       </Flex>

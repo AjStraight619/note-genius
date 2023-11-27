@@ -1,9 +1,7 @@
 "use client";
 import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
-import { User } from "@prisma/client";
 import { PersonIcon } from "@radix-ui/react-icons";
 import { Avatar, Button, Flex, Popover, Separator } from "@radix-ui/themes";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { LogInButton, LogOutButton } from "../auth/auth";
@@ -12,6 +10,11 @@ type DropDownItemProps = {
   icon: React.ReactNode;
   label: string;
   href: string;
+};
+
+type UserOptionsProps = {
+  userName: string | null;
+  userId: string | null;
 };
 
 const DropdownItem = ({ icon, label, href }: DropDownItemProps) => (
@@ -27,11 +30,7 @@ const DropdownItem = ({ icon, label, href }: DropDownItemProps) => (
   </Flex>
 );
 
-const UserOptions = () => {
-  const { data: session } = useSession();
-  const user = session?.user as User;
-  const userId = user?.id;
-  const userName = user?.name;
+const UserOptions = ({ userName, userId }: UserOptionsProps) => {
   const [mostRecentChatId, setMostRecentChatId] = useState(null);
 
   useEffect(() => {
@@ -48,7 +47,7 @@ const UserOptions = () => {
 
   return (
     <>
-      {session ? (
+      {userName && userId ? (
         <Popover.Root>
           <Popover.Trigger>
             <Button style={{ backgroundColor: "transparent" }}>

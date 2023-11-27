@@ -1,4 +1,7 @@
+import { authOptions } from "@/utils/authOptions";
+import { User } from "@prisma/client";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
+import { getServerSession } from "next-auth";
 import Link from "next/link";
 import Navbar from "./components/ui/navbar/Navbar";
 type FeatureCardProps = {
@@ -71,7 +74,7 @@ const FeaturesSection = (): JSX.Element => (
  */
 
 const FeatureCard = ({ title, description }: FeatureCardProps): JSX.Element => (
-  <div className="bg-black border border-slate-600 rounded-lg p-6 h-64 hover:cursor-pointer">
+  <div className="bg-black border border-slate-600 rounded-lg p-6 h-64 hover:cursor-pointer shadow-lg shadow-indigo-950">
     {" "}
     {/* Adjust height as needed */}
     <h3 className="text-xl font-semibold mb-3">{title}</h3>
@@ -100,18 +103,19 @@ const FinalCallToAction = (): JSX.Element => (
 );
 
 export default async function Home() {
-  // const session = await getServerSession(authOptions);
-  // let userId;
+  const session = await getServerSession(authOptions);
+  let userName;
+  let userId;
 
-  // if (session) {
-  //   const user = session.user as User;
-  //   userId = user.id as unknown as string;
-  //   console.log(userId);
-  // }
+  if (session) {
+    const user = session.user as User;
+    userName = user.name;
+    userId = user.id;
+  }
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-black p-24 relative">
-      <Navbar />
+      <Navbar userName={userName ?? ""} userId={userId ?? ""} />
       <div className="z-10 flex w-full max-w-5xl flex-col items-center justify-between font-mono text-sm">
         <HeroSection />
         <FeaturesSection />

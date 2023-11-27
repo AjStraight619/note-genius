@@ -36,6 +36,12 @@ const ChatDashboard = ({ chats }: SideBarProps) => {
   );
 
   useEffect(() => {
+    const timer = setTimeout(() => {}, 10000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
     const getChatMessagesById = async () => {
       try {
         const response = await fetch(
@@ -69,6 +75,7 @@ const ChatDashboard = ({ chats }: SideBarProps) => {
       </SidebarContainer>
 
       {/* Chat Container */}
+
       <Chat
         currentChatId={currentChatId}
         messagesFromDb={messagesFromDb}
