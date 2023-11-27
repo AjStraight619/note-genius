@@ -15,7 +15,7 @@ type FeatureCardProps = {
  */
 
 const HeroSection = (): JSX.Element => (
-  <div className="relative flex items-center justify-center py-20 overflow-hidden">
+  <div className="relative flex items-center justify-center py-4 overflow-hidden">
     <div className="text-center">
       <div
         className="relative inline-block text-5xl font-bold text-white"
