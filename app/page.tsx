@@ -1,17 +1,20 @@
-import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/utils/authOptions";
 import { User } from "@prisma/client";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import Navbar from "./components/ui/navbar/Navbar";
 type FeatureCardProps = {
   title: string;
   description: string;
 };
 
-const HeroSection = () => (
+/**
+ * HeroSection component displays the main banner of the landing page.
+ * @returns {JSX.Element} The Hero section component.
+ */
+
+const HeroSection = (): JSX.Element => (
   <div className="relative flex items-center justify-center py-20 overflow-hidden">
     <div className="text-center">
       <div
@@ -32,7 +35,11 @@ const HeroSection = () => (
   </div>
 );
 
-const FeaturesSection = () => (
+/**
+ * FeaturesSection component showcases the key features of Note Genius.
+ * @returns {JSX.Element} The Features section component.
+ */
+const FeaturesSection = (): JSX.Element => (
   <div className="text-white py-12">
     <div className="max-w-6xl mx-auto px-4">
       <h2 className="text-3xl font-bold text-center mb-8">
@@ -60,7 +67,13 @@ const FeaturesSection = () => (
   </div>
 );
 
-const FeatureCard = ({ title, description }: FeatureCardProps) => (
+/**
+ * FeatureCard component represents a single feature card.
+ * @param {FeatureCardProps} props - The props for the feature card.
+ * @returns {JSX.Element} A feature card component.
+ */
+
+const FeatureCard = ({ title, description }: FeatureCardProps): JSX.Element => (
   <div className="bg-black border border-slate-600 rounded-lg p-6 h-64 hover:cursor-pointer">
     {" "}
     {/* Adjust height as needed */}
@@ -69,15 +82,16 @@ const FeatureCard = ({ title, description }: FeatureCardProps) => (
   </div>
 );
 
-// FinalCallToAction component
-const FinalCallToAction = () => (
+/**
+ * FinalCallToAction component displays the final call to action section.
+ * @returns {JSX.Element} The final call to action component.
+ */
+
+const FinalCallToAction = (): JSX.Element => (
   <div className=" text-white py-12">
     <div className="max-w-6xl mx-auto px-4 text-center">
       <h2 className="text-3xl font-bold mb-8">Ready to get started?</h2>
-      <p className="mb-8">
-        Join the thousands of individuals improving their note-taking with
-        NoteGenius.
-      </p>
+
       <Link href="/signup">
         <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded inline-flex items-center">
           Sign Up Now
@@ -87,28 +101,6 @@ const FinalCallToAction = () => (
     </div>
   </div>
 );
-
-const getMostRecentChat = async (userId: string | undefined) => {
-  "use server";
-  if (!userId) {
-    redirect("/register");
-  }
-  const mostRecentChat = prisma.chat.findFirst({
-    where: {
-      userId: userId,
-    },
-
-    orderBy: {
-      updatedAt: "desc",
-    },
-
-    select: {
-      id: true,
-    },
-  });
-
-  return mostRecentChat;
-};
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -120,18 +112,12 @@ export default async function Home() {
     console.log(userId);
   }
 
-  const mostRecentChat = await getMostRecentChat(userId);
-
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-black p-24 relative">
       <Navbar />
       <div className="z-10 flex w-full max-w-5xl flex-col items-center justify-between font-mono text-sm">
         <HeroSection />
         <FeaturesSection />
-        {/* <TechnologyStack /> */}
-
-        {/* <HowItWorks /> */}
-        {/* <Testimonials /> */}
         <FinalCallToAction />
       </div>
     </main>

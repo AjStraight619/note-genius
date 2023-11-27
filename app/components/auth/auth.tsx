@@ -1,18 +1,12 @@
 "use client";
 
 import { ExitIcon } from "@radix-ui/react-icons";
+import { Button } from "@radix-ui/themes";
 import { signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export const LogInButton = () => {
-  return (
-    <span
-      className="mx-2 p-2 text-2xl font-bold cursor-pointer hover:bg-gray-800"
-      onClick={() => signIn()}
-    >
-      Log In
-    </span>
-  );
+  return <Button onClick={() => signIn()}>Log In</Button>;
 };
 
 export const LogOutButton = () => {

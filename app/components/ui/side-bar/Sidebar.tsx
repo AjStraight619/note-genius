@@ -20,7 +20,6 @@ import {
 import { useState } from "react";
 import ChatList from "./chats/ChatList";
 
-import Link from "next/link";
 import AddChat from "./chats/AddChat";
 
 type SideBarProps = {
@@ -33,23 +32,32 @@ type SideBarProps = {
 
 const Sidebar = ({ chats, addOptimisticChats }: SideBarProps) => {
   const [activeTab, setActiveTab] = useState("Chats");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   return (
-    <>
+    <div
+      className={`md: flex flex-col ${
+        isSidebarOpen ? "flex flex-col" : "hidden"
+      }`}
+    >
       <Flex
         mt={"2"}
-        justify={"between"}
+        justify={"center"}
         width={"100%"}
-        pl={"6"}
-        pr={"6"}
+        align={"center"}
         mb={"4"}
+        py={"4"}
+        px={"6"}
+        gap={"4"}
+        mx={"auto"}
       >
-        <Link href={"/"}>Home</Link>
         <AddChat addOptimisticChats={addOptimisticChats} />
-
-        <IconButton variant="soft">
-          <HamburgerMenuIcon />
-        </IconButton>
+        <div>
+          <IconButton onClick={toggleSidebar} variant="soft">
+            <HamburgerMenuIcon />
+          </IconButton>
+        </div>
       </Flex>
       <Flex
         direction={"row"}
@@ -100,7 +108,7 @@ const Sidebar = ({ chats, addOptimisticChats }: SideBarProps) => {
           {/* {activeTab === "files" && files && <LinkList  />} */}
         </Flex>
       </ScrollArea>
-    </>
+    </div>
   );
 };
 
