@@ -1,7 +1,4 @@
-import { authOptions } from "@/utils/authOptions";
-import { User } from "@prisma/client";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
-import { getServerSession } from "next-auth";
 import Link from "next/link";
 import Navbar from "./components/ui/navbar/Navbar";
 type FeatureCardProps = {
@@ -103,14 +100,14 @@ const FinalCallToAction = (): JSX.Element => (
 );
 
 export default async function Home() {
-  const session = await getServerSession(authOptions);
-  let userId;
+  // const session = await getServerSession(authOptions);
+  // let userId;
 
-  if (session) {
-    const user = session.user as User;
-    userId = user.id as unknown as string;
-    console.log(userId);
-  }
+  // if (session) {
+  //   const user = session.user as User;
+  //   userId = user.id as unknown as string;
+  //   console.log(userId);
+  // }
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-black p-24 relative">
